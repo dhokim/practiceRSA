@@ -1,8 +1,8 @@
 package practiceRSA;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Random;
+import java.io.*;
 
 public class RSA_Algorithm {
 	private BigInteger p;
@@ -31,5 +31,39 @@ public class RSA_Algorithm {
 	
 	public static void main(String[] args) throws IOException {
 		RSA_Algorithm rsa = new RSA_Algorithm();
+		DataInputStream in = new DataInputStream(System.in);
+		String plaintext;
+		System.out.println("Enter the plain text:");
+		plaintext=in.readLine();
+		System.out.println("Encrypting String: " + plaintext);
+		System.out.println("String in Bytes: " + bytesToString(plaintext.getBytes()));
+		
+		//encrypt
+		byte[] encrypted = rsa.encrypt(plaintext.getBytes());
+		System.out.println("Encrypted String in Bytes: " + bytesToString(encrypted));
+		
+		//decrypt
+		byte[] decrypted = rsa.decrypt(encrypted);
+		System.out.println("Decrypted String in Bytes: " + bytesToString(decrypted));
+		
+		System.out.println("Decrypted String: " + new String(decrypted));
+	}
+	
+	private static String bytesToString(byte[] encrypted){
+		String test = "";
+		for(byte b : encrypted){
+			test += Byte.toString(b);
+		}		
+		return test;
+	}
+	
+	//Encrypt message
+	public byte[] encrypt(byte[] message){
+		return (new BigInteger(message)).modPow(e, n).toByteArray();
+	}
+	
+	//Decrypt message
+	public byte[] decrypt(byte[] message){
+		return (new BigInteger(message)).modPow(d, n).toByteArray();
 	}
 }
