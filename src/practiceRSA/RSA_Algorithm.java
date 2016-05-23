@@ -18,11 +18,13 @@ public class RSA_Algorithm {
 		rng = new Random();
 		p = BigInteger.probablePrime(bitLength/2, rng);
 		q = BigInteger.probablePrime(bitLength/2, rng);
+		// n=p*q
 		n = p.multiply(q);
+		// v=(p-1)*(q-1)
 		v = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
-		
 		e = BigInteger.probablePrime(bitLength/2, rng);
 		
+		// gcd(v,e)=1 && e<v
 		while(v.gcd(e).compareTo(BigInteger.ONE)>0 && e.compareTo(v)<0){
 			e.add(BigInteger.ONE);
 		}		
@@ -33,6 +35,9 @@ public class RSA_Algorithm {
 		RSA_Algorithm rsa = new RSA_Algorithm();
 		DataInputStream in = new DataInputStream(System.in);
 		String plaintext;
+		System.out.println("Public Key : (" + rsa.e + "," + rsa.n + ")");
+		System.out.println("Private Key : (" + rsa.d + "," + rsa.n + ")");
+
 		System.out.println("Enter the plain text:");
 		plaintext=in.readLine();
 		System.out.println("Encrypting String: " + plaintext);
@@ -44,9 +49,9 @@ public class RSA_Algorithm {
 		
 		//decrypt
 		byte[] decrypted = rsa.decrypt(encrypted);
-		System.out.println("Decrypted String in Bytes: " + bytesToString(decrypted));
-		
+		System.out.println("Decrypted String in Bytes: " + bytesToString(decrypted));		
 		System.out.println("Decrypted String: " + new String(decrypted));
+
 	}
 	
 	private static String bytesToString(byte[] encrypted){
@@ -67,3 +72,4 @@ public class RSA_Algorithm {
 		return (new BigInteger(message)).modPow(d, n).toByteArray();
 	}
 }
+
